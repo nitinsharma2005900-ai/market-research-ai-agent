@@ -167,7 +167,7 @@ TAVILY_API_KEY=your_tavily_api_key_here
 SERPER_API_KEY=your_serper_api_key_here
 
 # Model Selection
-GEMINI_MODEL=gemini/gemini-3.8-flash
+GEMINI_MODEL=gemini/gemini-3.7-flash
 TEMPERATURE=0.7
 VERBOSE=True
 ```

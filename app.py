@@ -922,7 +922,7 @@ elif nav_choice == "⚙️ Platform Settings":
     st.markdown("#### 🧠 Model Selection & Inference Parameters")
     model_sel = st.selectbox(
         "Google Gemini Manager Model",
-        options=["gemini/gemini-2.5-flash", "gemini/gemini-1.5-flash", "gemini/gemini-1.5-pro"],
+        options=["gemini/gemini-3.7-flash", "gemini/gemini-3.6-flash", "gemini/gemini-3.5-flash"],
         index=0,
     )
     temp_sel = st.slider("Temperature", min_value=0.0, max_value=1.0, value=TEMPERATURE, step=0.05)
