@@ -1,0 +1,45 @@
+{
+  "timestamp": "2026-11-19T17:32:19.536250",
+  "query": "Tech Sector Q3 Analysis",
+  "llm_model": "gemini/gemini-2.5-flash",
+  "status": "SUCCESS",
+  "total_execution_time_seconds": 20.01,
+  "task_benchmarks": [
+    {
+      "task_name": "Market Research & Data Scraping",
+      "agent_role": "Market Research Specialist",
+      "duration_seconds": 5.227,
+      "status": "COMPLETED",
+      "completed_iso": "2026-11-19T17:32:17.591661"
+    },
+    {
+      "task_name": "Quantitative Financial Analytics",
+      "agent_role": "Financial Data Analyst",
+      "duration_seconds": 0.849,
+      "status": "COMPLETED",
+      "completed_iso": "2026-11-19T17:32:18.440797"
+    },
+    {
+      "task_name": "Report Synthesis & Drafting",
+      "agent_role": "Technical Reports Writer",
+      "duration_seconds": 1.0,
+      "status": "COMPLETED",
+      "completed_iso": "2026-11-19T17:32:19.441375"
+    }
+  ],
+  "task_routing_history": [
+    "[17:31:59] Manager LLM initialized workflow for: 'Tech Sector Q3 Analysis'",
+    "[17:31:59] Manager LLM -> Delegated to 'CrewAI Hierarchical Team' for 'Hierarchical Multi-Agent Execution'",
+    "[17:32:12] Manager LLM -> Delegated to 'Market Research Specialist' for 'Market Research & Data Scraping'",
+    "[17:32:17] 'Market Research Specialist' completed 'Market Research & Data Scraping' in 5.227s",
+    "[17:32:17] Manager LLM -> Delegated to 'Financial Data Analyst' for 'Quantitative Financial Analytics'",
+    "[17:32:18] 'Financial Data Analyst' completed 'Quantitative Financial Analytics' in 0.849s",
+    "[17:32:18] Manager LLM -> Delegated to 'Technical Reports Writer' for 'Report Synthesis & Drafting'",
+    "[17:32:19] 'Technical Reports Writer' completed 'Report Synthesis & Drafting' in 1.0s",
+    "[17:32:19] Workflow finished successfully. Total duration: 20.01s"
+  ],
+  "summary": {
+    "total_tasks": 3,
+    "average_task_latency_seconds": 2.359
+  }
+}

@@ -27,7 +27,7 @@ SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Primary Gemini Model Configuration
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini/gemini-2.5-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini/gemini-3.8-flash")
 TEMPERATURE = float(os.getenv("TEMPERATURE", "0.7"))
 VERBOSE = os.getenv("VERBOSE", "True").lower() in ("true", "1", "yes")
 

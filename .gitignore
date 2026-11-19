@@ -27,6 +27,7 @@ wheels/
 # Secrets & Environment
 .env
 *.env.local
+Market_Research_AI_Agent.zip
 
 # Pytest
 .pytest_cache/

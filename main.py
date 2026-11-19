@@ -176,7 +176,7 @@ def main():
         "--model",
         type=str,
         default=GEMINI_MODEL,
-        help="Gemini model identifier (e.g. 'gemini/gemini-2.5-flash')",
+        help="Gemini model identifier (e.g. 'gemini/gemini-3.8-flash')",
     )
 
     args = parser.parse_args()
