@@ -185,6 +185,55 @@ def _build_styles() -> Dict[str, ParagraphStyle]:
     return custom_styles
 
 
+def _create_kpi_cards(csv_path: str, styles: Dict[str, ParagraphStyle], printable_width: float) -> Optional[Table]:
+    """Generates an executive KPI metrics card row for the PDF report."""
+    try:
+        df = get_raw_dataframe(csv_path)
+        col_w = printable_width / 4.0
+
+        # Extract representative metrics safely
+        rev_val = f"${df['Revenue_B'].median():.1f}B" if "Revenue_B" in df.columns else "N/A"
+        margin_val = f"{df['Net_Margin_Pct'].mean():.1f}%" if "Net_Margin_Pct" in df.columns else "N/A"
+        pe_val = f"{df['PE_Ratio'].median():.1f}x" if "PE_Ratio" in df.columns else "N/A"
+        fcf_val = f"${df['Free_Cash_Flow_B'].mean():.1f}B" if "Free_Cash_Flow_B" in df.columns else "N/A"
+
+        lbl_style = ParagraphStyle(
+            "KPILabel",
+            fontName="Helvetica-Bold",
+            fontSize=7,
+            leading=8.5,
+            textColor=colors.HexColor("#94A3B8"),
+            alignment=1,
+        )
+        val_style = ParagraphStyle(
+            "KPIVal",
+            fontName="Helvetica-Bold",
+            fontSize=13,
+            leading=16,
+            textColor=colors.HexColor("#38BDF8"),  # Bright sky cyan
+            alignment=1,
+        )
+
+        card1 = [Spacer(1, 2), Paragraph("MEDIAN REVENUE", lbl_style), Spacer(1, 2), Paragraph(rev_val, val_style), Spacer(1, 2)]
+        card2 = [Spacer(1, 2), Paragraph("AVG NET MARGIN", lbl_style), Spacer(1, 2), Paragraph(margin_val, val_style), Spacer(1, 2)]
+        card3 = [Spacer(1, 2), Paragraph("MEDIAN P/E MULTIPLE", lbl_style), Spacer(1, 2), Paragraph(pe_val, val_style), Spacer(1, 2)]
+        card4 = [Spacer(1, 2), Paragraph("AVG FREE CASH FLOW", lbl_style), Spacer(1, 2), Paragraph(fcf_val, val_style), Spacer(1, 2)]
+
+        kpi_table = Table([[card1, card2, card3, card4]], colWidths=[col_w] * 4)
+        kpi_table.setStyle(
+            TableStyle([
+                ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#0F172A")),
+                ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#334155")),
+                ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#1E293B")),
+                ("PADDING", (0, 0), (-1, -1), 6),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ])
+        )
+        return kpi_table
+    except Exception:
+        return None
+
+
 def _create_header_banner(query: str, styles: Dict[str, ParagraphStyle], printable_width: float) -> Table:
     """Creates the modern executive header banner with document metadata."""
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -314,9 +363,17 @@ def generate_pdf_report(
     styles = _build_styles()
     story = []
 
-    # 1. Header Banner
+    # 1. Header Banner & Executive KPI Metrics Row
     story.append(_create_header_banner(query, styles, printable_width))
-    story.append(Spacer(1, 14))
+    story.append(Spacer(1, 8))
+
+    if csv_path and Path(csv_path).is_file():
+        kpi_table = _create_kpi_cards(csv_path, styles, printable_width)
+        if kpi_table:
+            story.append(kpi_table)
+            story.append(Spacer(1, 10))
+    else:
+        story.append(Spacer(1, 6))
 
     # 2. Parse Markdown Sections
     lines = markdown_content.split("\n")
