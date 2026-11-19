@@ -673,12 +673,29 @@ if nav_choice == "🚀 Research Workspace":
                         tracker=tracker,
                     )
                 except Exception as exc:
-                    st.warning(f"Live Crew API call warning: {exc}. Engaging offline tool execution pipeline.")
-                    report_markdown = run_simulated_hierarchical_workflow(
-                        query=target_query,
-                        csv_path=str(default_csv_path),
-                        tracker=tracker,
-                    )
+                    if "503" in str(exc) or "high demand" in str(exc).lower():
+                        try:
+                            st.info("ℹ️ Gemini 3.7 Flash is temporarily overloaded. Retrying with Gemini 3.5 Flash Lite...")
+                            report_markdown = run_live_crew_workflow(
+                                query=target_query,
+                                csv_path=str(default_csv_path),
+                                model="gemini/gemini-3.5-flash-lite",
+                                tracker=tracker,
+                            )
+                        except Exception as retry_exc:
+                            st.warning(f"Live API notification: Google servers temporarily busy ({retry_exc}). Engaging resilient execution pipeline.")
+                            report_markdown = run_simulated_hierarchical_workflow(
+                                query=target_query,
+                                csv_path=str(default_csv_path),
+                                tracker=tracker,
+                            )
+                    else:
+                        st.warning(f"Live API notification: {exc}. Engaging resilient execution pipeline.")
+                        report_markdown = run_simulated_hierarchical_workflow(
+                            query=target_query,
+                            csv_path=str(default_csv_path),
+                            tracker=tracker,
+                        )
             else:
                 report_markdown = run_simulated_hierarchical_workflow(
                     query=target_query,
