@@ -5,13 +5,22 @@ and returns clean Markdown tables for agent consumption and report generation.
 """
 
 from pathlib import Path
+from typing import Optional
 import pandas as pd
 from crewai.tools import tool
 from config.settings import DATA_DIR, PROJECT_ROOT
 
 
-def resolve_csv_path(csv_path: str) -> Path:
+def resolve_csv_path(csv_path: Optional[str] = None, allow_fallback: bool = False) -> Path:
     """Resolve csv path whether given as absolute, relative, or just filename."""
+    if not csv_path and allow_fallback:
+        fallback = DATA_DIR / "sample_financials.csv"
+        if fallback.is_file():
+            return fallback
+
+    if not csv_path:
+        raise FileNotFoundError("No CSV path provided.")
+
     path = Path(csv_path)
     if path.is_file():
         return path
@@ -26,10 +35,10 @@ def resolve_csv_path(csv_path: str) -> Path:
     if candidate.is_file():
         return candidate
         
-    # Default fallback to sample_financials.csv
-    fallback = DATA_DIR / "sample_financials.csv"
-    if fallback.is_file():
-        return fallback
+    if allow_fallback:
+        fallback = DATA_DIR / "sample_financials.csv"
+        if fallback.is_file():
+            return fallback
 
     raise FileNotFoundError(f"CSV file not found at: {csv_path}")
 
